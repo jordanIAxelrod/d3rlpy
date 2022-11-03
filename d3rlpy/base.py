@@ -652,7 +652,7 @@ class LearnableBase:
 
                 # call callback if given
                 if callback:
-                    callback(self, epoch, total_step)
+                    callback(self, epoch, total_step, batch)
 
             # save loss to loss history dict
             self._loss_history["epoch"].append(epoch)
