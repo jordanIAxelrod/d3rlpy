@@ -484,6 +484,7 @@ def evaluate_on_environment(
 
                 if done:
                     break
+                count += 1
             episode_rewards.append(episode_reward)
         return float(np.mean(episode_rewards)), float(np.mean(first_qs))
 
