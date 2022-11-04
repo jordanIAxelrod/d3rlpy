@@ -452,6 +452,7 @@ def evaluate_on_environment(
             )
 
         episode_rewards = []
+        first_qs = []
         for _ in range(n_trials):
             observation = env.reset()
             episode_reward = 0.0
@@ -460,7 +461,7 @@ def evaluate_on_environment(
             if is_image:
                 stacked_observation.clear()
                 stacked_observation.append(observation)
-
+            count = 0
             while True:
                 # take action
                 if np.random.random() < epsilon:
@@ -472,8 +473,9 @@ def evaluate_on_environment(
                         action = algo.predict([observation])[0]
 
                 observation, reward, done, _ = env.step(action)
-                episode_reward += reward
-
+                episode_reward += reward * algo.gamma ** count
+                if count == 0:
+                    first_qs.append(algo.predict_value([observation], [action]))
                 if is_image:
                     stacked_observation.append(observation)
 
@@ -483,7 +485,7 @@ def evaluate_on_environment(
                 if done:
                     break
             episode_rewards.append(episode_reward)
-        return float(np.mean(episode_rewards))
+        return float(np.mean(episode_rewards)), float(np.mean(first_qs))
 
     return scorer
 
